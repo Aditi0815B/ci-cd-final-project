@@ -32,8 +32,9 @@ def bad_request(error):
     app.logger.warning(message)
     return (
         jsonify(
-            status=status.HTTP_400_BAD_REQUEST, 
-            error="Bad Request", message=message
+            status=status.HTTP_400_BAD_REQUEST,
+            error="Bad Request",
+            message=message
         ),
         status.HTTP_400_BAD_REQUEST,
     )
@@ -45,8 +46,11 @@ def not_found(error):
     message = str(error)
     app.logger.warning(message)
     return (
-        jsonify(status=status.HTTP_404_NOT_FOUND, error="Not Found", 
-                message=message),
+        jsonify(
+            status=status.HTTP_404_NOT_FOUND,
+            error="Not Found",
+            message=message
+        ),
         status.HTTP_404_NOT_FOUND,
     )
 
@@ -60,7 +64,7 @@ def method_not_supported(error):
         jsonify(
             status=status.HTTP_405_METHOD_NOT_ALLOWED,
             error="Method not Allowed",
-            message=message,
+            message=message
         ),
         status.HTTP_405_METHOD_NOT_ALLOWED,
     )
@@ -75,7 +79,7 @@ def resource_conflict(error):
         jsonify(
             status=status.HTTP_409_CONFLICT,
             error="Conflict",
-            message=message,
+            message=message
         ),
         status.HTTP_409_CONFLICT,
     )
@@ -90,7 +94,7 @@ def mediatype_not_supported(error):
         jsonify(
             status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
             error="Unsupported media type",
-            message=message,
+            message=message
         ),
         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
     )
@@ -105,7 +109,7 @@ def internal_server_error(error):
         jsonify(
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             error="Internal Server Error",
-            message=message,
+            message=message
         ),
         status.HTTP_500_INTERNAL_SERVER_ERROR,
     )

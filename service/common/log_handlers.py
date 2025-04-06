@@ -17,8 +17,7 @@
 """
 Log Handlers
 
-This module contains utility functions to set up logging
-consistently
+This module contains utility functions to set up logging consistently
 """
 import logging
 
@@ -37,4 +36,5 @@ def init_logging(app, logger_name: str):
 
     for handler in app.logger.handlers:
         handler.setFormatter(formatter)
+
     app.logger.info("Logging handler established")

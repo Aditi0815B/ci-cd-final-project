@@ -1,0 +1,64 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: flake8-lint
+spec:
+  workspaces:
+    - name: source
+  steps:
+    - name: lint
+      image: python:3.9-slim
+      workingDir: $(workspaces.source.path)
+      script: |
+        #!/bin/bash
+        set -e
+        pip install --upgrade pip
+        pip install flake8
+        flake8 .
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: nose
+spec:
+  workspaces:
+    - name: source
+  params:
+    - name: args
+      description: Arguments to pass to nose
+      type: string
+      default: "-v"
+  steps:
+    - name: nosetests
+      image: python:3.9-slim
+      workingDir: $(workspaces.source.path)
+      script: |
+        #!/bin/bash
+        set -e
+        pip install --upgrade pip wheel
+        pip install -r requirements.txt
+        nosetests $(params.args)
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: buildah
+spec:
+  params:
+    - name: IMAGE
+      description: The image to build
+      type: string
+  workspaces:
+    - name: source
+  steps:
+    - name: build
+      image: quay.io/buildah/buildah:v1.34.0
+      workingDir: $(workspaces.source.path)
+      env:
+        - name: STORAGE_DRIVER
+          value: vfs
+      script: |
+        #!/bin/sh
+        buildah bud --storage-driver=vfs -t $(params.IMAGE) .
+        buildah push --storage-driver=vfs $(params.IMAGE)

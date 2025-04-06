@@ -1,0 +1,21 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: oc-deploy
+spec:
+  params:
+    - name: app-name
+      description: Name of the application to deploy
+      type: string
+    - name: build-image
+      description: Full image name including registry
+      type: string
+  steps:
+    - name: deploy
+      image: quay.io/openshift/origin-cli:latest
+      script: |
+        #!/bin/bash
+        set -e
+        echo "Deploying application $(params.app-name) with image $(params.build-image)..."
+        oc create deployment $(params.app-name) --image=$(params.build-image) --dry-run=client -o yaml | oc apply -f -
